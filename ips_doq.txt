@@ -1,0 +1,83 @@
+Inline Mode [IPS]
+````````````````````
+
+IDS + IPS: IDPS
+
+
+Download and Install DAQ (Data Acquisition):
+
+# cd /etc/snort
+# wget https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz
+# tar -xvzf daq-2.0.7.tar.gz
+
+DAQ Dep:
+````````
+Older Ubuntu:
+`````````````
+# apt install -y gcc libpcre3-dev zlib1g-dev libluajit-5.1-dev libpcap-dev openssl libssl-dev libnghttp2-dev libdumbnet-dev bison flex libdnet autoconf libtool make build-essential
+OR
+ubuntu 24:
+``````````
+# apt install -y gcc libpcre3-dev zlib1g-dev libluajit-5.1-dev libpcap-dev openssl libssl-dev libnghttp2-dev libdumbnet-dev bison flex libnet-libdnet-perl autoconf libtool make build-essential 
+
+# cd daq-2.0.7
+# ./configure && make && make install
+
+
+
+<><><<><><><><<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+<><><<><><><><<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+<><><<><><><><<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+
+
+
+DAQ [Data Acquisition library] - Inline Mode:[IPS]
+``````````````````````````````````````````````````
+Step 1
+``````
+# snort --daq-list
+	Available DAQ modules:
+		pcap(v3): the default mode, used for sniffer and IDS modes
+		nfq(v7): inline on Linux netfilter
+		ipfw(v3): used divert sockets with the pf & ipfw firewalls
+		dump(v3): allow testing of online 
+		afpacket(v5): On linux using two bridged interface
+
+
+# cp -av ~/daq-2.0.7 /etc/snort/
+
+Step 2
+``````
+# vim /etc/snort/snort.conf
+
+Uncomment DAQ config
+
+# config daq: <type>
+# config daq_dir: <dir>
+# config daq_mode: <mode>
+# config daq_var: <var>
+
+to --->
+
+ config daq: afpacket
+ config daq_dir: /etc/snort/daq-2.0.7
+ config daq_mode: inline
+ config daq_var: buffer_size_mb=512
+
+
+
+:wq
+
+Step 3
+``````
+# vim /etc/snort/rules/local.rules
+
+drop icmp $HOME_NET any -> any any (msg:"ICMP detect and drop"; sid:1000001; rev:1; classtype:icmp-event;)
+
+:wq
+
+
+# snort -T -i eth0:eth1 -Q -q -c /etc/snort/snort.conf	[ TEST ]
+
+# snort -A console -q -Q -i eth0:eth1 -c /etc/snort/snort.conf 
