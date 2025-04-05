@@ -1,3 +1,7 @@
 
 devops cheet sheet
 https://www.linkedin.com/posts/ahmedalibutt_devops-cheat-sheet-activity-7313613766607220738-opmQ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEIxO4EBXeYE7RYyNOiDtfOiQlrnCTwoj48
+
+
+kube
+https://www.linkedin.com/posts/tarasowski_kubernetes-commands-cheat-sheet-activity-7313938407951343616-V__V?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAEIxO4EBXeYE7RYyNOiDtfOiQlrnCTwoj48
